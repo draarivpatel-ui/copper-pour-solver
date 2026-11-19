@@ -2,7 +2,7 @@
   "name": "@tscircuit/copper-pour-solver",
   "license": "MIT",
   "main": "dist/index.js",
-  "version": "0.0.73",
+  "version": "0.0.75",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tscircuit/copper-pour-solver.git"
