@@ -14,5 +14,6 @@
   "capture": "First copper-pour getOutput input from the original uploaded icepi-native TSX, rendered with default routing. The circuit includes existing routing errors; the repro isolates copper-pour generation. All 76 regions are solved; the SVG displays top copper.",
   "inputSha256": "9275dad33961348b8c18340e60300efc9e9e263bf3f2486999f29f643363b37d",
   "circuitSha256": "e2eab77b380e26267a91474c4a1575e170dc7811d213d16c3ce35648764faa80",
-  "license": "CERN-OHL-1.2.txt"
+  "license": "Solderpad-2.1.txt (incorporates Apache-2.0.txt)",
+  "licenseSource": "https://github.com/cheyao/icepi-sbc/blob/45037f8522e6b95649ab43772b08fe223cb87f01/LICENSE"
 }
