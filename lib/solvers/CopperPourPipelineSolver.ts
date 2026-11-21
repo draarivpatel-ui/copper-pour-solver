@@ -12,8 +12,13 @@ import {
   subtractBlockersFromPour,
   subtractCrossSectionBlockers,
 } from "./copper-pour/manifold-geometry-adapter"
-import { isManifoldGeometryInitialized } from "./copper-pour/manifold-runtime"
+import {
+  isManifoldGeometryInitialized,
+  type CrossSection,
+} from "./copper-pour/manifold-runtime"
 import { processObstaclesForPour } from "./copper-pour/process-obstacles"
+
+type BoardSectionKey = string
 
 export class CopperPourPipelineSolver extends BasePipelineSolver<InputProblem> {
   pipelineDef = []
@@ -35,6 +40,7 @@ export class CopperPourPipelineSolver extends BasePipelineSolver<InputProblem> {
     const brep_shapes_by_region: BRepShape[][] = this.input.regionsForPour.map(
       () => [],
     )
+    const boardSections = new Map<BoardSectionKey, CrossSection>()
     const solvedRegions: Array<{
       layer: string
       connectivityKey: string
@@ -92,13 +98,22 @@ export class CopperPourPipelineSolver extends BasePipelineSolver<InputProblem> {
         polygonsToSubtract,
       )
       const boardOutline = region.boardOutline ?? region.boardEdgeOutline
-      const boardSection = boardOutline?.length
-        ? subtractBlockersFromPour(
+      let boardSection: CrossSection | undefined
+      if (boardOutline?.length) {
+        const boardSectionKey: BoardSectionKey = JSON.stringify([
+          String(region.board_edge_margin),
+          boardOutline.map(({ x, y }) => [x, y]),
+        ])
+        boardSection = boardSections.get(boardSectionKey)
+        if (!boardSection) {
+          boardSection = subtractBlockersFromPour(
             boardOutline,
             processObstaclesForPour([], undefined, pourMargins, boardOutline)
               .polygonsToSubtract,
           )
-        : undefined
+          boardSections.set(boardSectionKey, boardSection)
+        }
+      }
       const clippedPour = boardSection
         ? intersectCrossSections(pourWithoutComponentObstacles, boardSection)
         : pourWithoutComponentObstacles
